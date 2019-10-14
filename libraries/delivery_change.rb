@@ -46,8 +46,8 @@ module DeliverySugar
     #   @workspace_repo is the git repo absolute path
     #   @pipeline is the merge target aka @target_branch
     #   @patchset_branch is the source branch of merge request
-    def initialize(workspace_repo:, target_branch:, source_branch:)
-      @workspace_repo = workspace_repo
+    def initialize(repo_path:, target_branch:, source_branch:)
+      @workspace_repo = repo_path
       @pipeline = target_branch
       @patchset_branch = source_branch
     end
