@@ -47,24 +47,9 @@ module DeliverySugar
     #   @pipeline is the merge target aka @target_branch
     #   @patchset_branch is the source branch of merge request
     def initialize(workspace_repo:, target_branch:, source_branch:)
-      change = node['delivery']['change']
-      workspace = node['delivery']['workspace']
-      @build_user = node['delivery_builder']['build_user']
-      @workspace_repo = workspace['repo']
-      @workspace_cache = workspace['cache']
-      @workspace_chef = workspace['chef']
-      @workspace_root = workspace['root']
-      @workspace_path = node['delivery']['workspace_path'] ||
-                        '/var/opt/delivery/workspace'
-      @enterprise = change['enterprise']
-      @organization = change['organization']
-      @stage = change['stage']
-      @phase = change['phase']
-      @project = change['project']
-      @pipeline = change['pipeline']
-      @change_id = change['change_id']
-      @merge_sha = change['sha']
-      @patchset_branch = change['patchset_branch']
+      @workspace_repo = workspace_repo
+      @pipeline = target_branch
+      @patchset_branch = source_branch
     end
 
     #
