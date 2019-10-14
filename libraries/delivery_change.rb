@@ -26,7 +26,7 @@ module DeliverySugar
     attr_reader :enterprise, :organization, :project, :pipeline,
                 :stage, :phase, :patchset_branch, :scm_client, :workspace_path,
                 :workspace_repo, :workspace_cache, :workspace_chef, :workspace_root,
-                :change_id, :merge_sha, :build_user
+                :change_id, :build_user
 
     #
     # Create a new DeliverySugar::Change object
@@ -120,14 +120,10 @@ module DeliverySugar
     #
     # @return [Array<String>]
     def change_log
-      if @merge_sha.empty?
-        merge_base = scm_client.merge_base(@workspace_repo, "origin/#{@pipeline}",
-                                           "origin/#{@patchset_branch}")
-        scm_client.commit_log(@workspace_repo, merge_base,
-                              "origin/#{@patchset_branch}")
-      else
-        scm_client.commit_log(@workspace_repo, "#{@merge_sha}^", @merge_sha)
-      end
+      merge_base = scm_client.merge_base(@workspace_repo, "origin/#{@pipeline}",
+                                         "origin/#{@patchset_branch}")
+      scm_client.commit_log(@workspace_repo, merge_base,
+                            "origin/#{@patchset_branch}")
     end
 
     #
