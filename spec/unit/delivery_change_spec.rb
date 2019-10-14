@@ -193,30 +193,15 @@ describe DeliverySugar::Change do
     let(:workspace) { 'workspace_repo' }
     let(:merge_base_sha) { 'merge_base_sha' }
 
-    context 'when merge_sha is missing' do
-      it 'uses the patchset_branch for the compare' do
-        allow(subject).to receive(:scm_client).and_return(client)
-        expect(client).to receive(:merge_base)
-          .with('workspace_repo', 'origin/pipe', 'origin/patchset_branch')
-          .and_return(merge_base_sha)
-        expect(client).to receive(:changed_files)
-          .with(workspace, merge_base_sha, branch2).and_return(list_of_files)
+    it 'uses the patchset_branch for the compare' do
+      allow(subject).to receive(:scm_client).and_return(client)
+      expect(client).to receive(:merge_base)
+        .with('workspace_repo', 'origin/pipe', 'origin/patchset_branch')
+        .and_return(merge_base_sha)
+      expect(client).to receive(:changed_files)
+        .with(workspace, merge_base_sha, branch2).and_return(list_of_files)
 
-        expect(subject.changed_files).to eql(list_of_files)
-      end
-    end
-
-    context 'when merge_sha is present' do
-      let(:patchset_branch) { '' }
-      let(:sha) { 'sha' }
-
-      it 'uses the sha~1 for the compare' do
-        allow(subject).to receive(:scm_client).and_return(client)
-        expect(client).to receive(:changed_files)
-          .with(workspace, 'sha~1', 'sha').and_return(list_of_files)
-
-        expect(subject.changed_files).to eql(list_of_files)
-      end
+      expect(subject.changed_files).to eql(list_of_files)
     end
   end
 

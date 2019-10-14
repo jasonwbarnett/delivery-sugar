@@ -42,7 +42,11 @@ module DeliverySugar
     # rubocop:disable CyclomaticComplexity
     # rubocop:disable PerceivedComplexity
     #
-    def initialize(node)
+    # NEEDED:
+    #   @workspace_repo is the git repo absolute path
+    #   @pipeline is the merge target aka @target_branch
+    #   @patchset_branch is the source branch of merge request
+    def initialize(workspace_repo:, target_branch:, source_branch:)
       change = node['delivery']['change']
       workspace = node['delivery']['workspace']
       @build_user = node['delivery_builder']['build_user']
@@ -99,14 +103,10 @@ module DeliverySugar
     # @return [Array<String>]
     #
     def changed_files
-      if @merge_sha.empty?
-        merge_base = scm_client.merge_base(@workspace_repo, "origin/#{@pipeline}",
-                                           "origin/#{@patchset_branch}")
-        scm_client.changed_files(@workspace_repo, merge_base,
-                                 "origin/#{@patchset_branch}")
-      else
-        scm_client.changed_files(@workspace_repo, "#{@merge_sha}~1", @merge_sha)
-      end
+      merge_base = scm_client.merge_base(@workspace_repo, "origin/#{@pipeline}",
+                                         "origin/#{@patchset_branch}")
+      scm_client.changed_files(@workspace_repo, merge_base,
+                               "origin/#{@patchset_branch}")
     end
 
     #
